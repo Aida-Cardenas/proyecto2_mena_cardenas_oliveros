@@ -4,25 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="094017f5-d2d6-4276-abbf-4e5deb70e032" name="Changes" comment="ADD: Datasets">
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Data/Interim/popular_genre_lookup.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Data/Processed/features_matrix.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Data/Processed/labels.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Data/Processed/vgsales_integrated_clean.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Data/Processed/vgsales_integrated_refined.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Data/build_genre_data.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Data/load_data.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Data/preprocess.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Features/build_features.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Models/baseline_perceptron.pth" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Models/mlp_classifier.pth" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Models/train_pytorch.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Datasets/popularvg2y.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Data/Raw/popularvg2y.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Datasets/vgsales3m.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Data/Raw/vgsales3m.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Datasets/vgsales8years.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Data/Raw/vgsales8years.csv" afterDir="false" />
-    </list>
+    <list default="true" id="094017f5-d2d6-4276-abbf-4e5deb70e032" name="Changes" comment="ADD: Datasets" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -87,7 +69,7 @@
       <updated>1748323782925</updated>
       <workItem from="1748323783350" duration="75000" />
       <workItem from="1748764277865" duration="30000" />
-      <workItem from="1748771658765" duration="5163000" />
+      <workItem from="1748771658765" duration="5537000" />
     </task>
     <task id="LOCAL-00001" summary="ADD: Datasets">
       <option name="closed" value="true" />
