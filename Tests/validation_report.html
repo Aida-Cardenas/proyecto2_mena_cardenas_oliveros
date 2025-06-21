@@ -1,0 +1,202 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reporte de Validación - Sistema Predictor de Videojuegos</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f5f5f5; }
+        .container { max-width: 1200px; margin: 0 auto; background-color: white; padding: 20px; border-radius: 10px; }
+        .header { text-align: center; color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 20px; }
+        .summary { display: flex; justify-content: space-around; margin: 20px 0; }
+        .metric { text-align: center; padding: 15px; border-radius: 8px; }
+        .passed { background-color: #d5f4e6; color: #27ae60; }
+        .failed { background-color: #fadbd8; color: #e74c3c; }
+        .warning { background-color: #fdebd0; color: #f39c12; }
+        .test-section { margin: 20px 0; border: 1px solid #ddd; border-radius: 8px; }
+        .test-header { background-color: #ecf0f1; padding: 15px; font-weight: bold; }
+        .test-content { padding: 15px; }
+        .status-passed { color: #27ae60; font-weight: bold; }
+        .status-failed { color: #e74c3c; font-weight: bold; }
+        .details { margin: 10px 0; }
+        .details ul { margin: 5px 0; padding-left: 20px; }
+        .timestamp { text-align: center; color: #7f8c8d; margin-top: 20px; }
+        table { width: 100%; border-collapse: collapse; margin: 10px 0; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎮 REPORTE DE VALIDACIÓN DEL SISTEMA</h1>
+            <h2>Predictor de Éxito en Videojuegos</h2>
+        </div>
+        
+        <div class="summary">
+            <div class="metric passed">
+                <h3>5</h3>
+                <p>Pruebas Pasadas</p>
+            </div>
+            <div class="metric failed">
+                <h3>0</h3>
+                <p>Pruebas Fallidas</p>
+            </div>
+            <div class="metric warning">
+                <h3>5</h3>
+                <p>Total de Pruebas</p>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <div class="test-header">
+                Integridad de Datos - <span class="status-passed">PASSED</span>
+            </div>
+            <div class="test-content">
+<h4>✅ Detalles:</h4><ul><li>✅ Dimensiones correctas: 16767 muestras, 943 características</li><li>✅ No hay valores faltantes en labels</li><li>✅ Distribución balanceada: 25.3% clase minoritaria</li><li>✅ No hay valores infinitos en features</li></ul><h4>⚠️ Advertencias:</h4><ul><li>Valores faltantes en features: 2</li></ul></div></div>
+        <div class="test-section">
+            <div class="test-header">
+                Rendimiento de Modelos - <span class="status-passed">PASSED</span>
+            </div>
+            <div class="test-content">
+<h4>✅ Detalles:</h4><ul><li>✅ mlp: Excelente precisión (0.996)</li><li>✅ baseline: Excelente precisión (0.951)</li><li>✅ MLP supera al baseline (+0.045)</li></ul><h4>📊 Métricas de Rendimiento:</h4><table><tr><th>Modelo</th><th>Precisión</th><th>Recall</th><th>F1-Score</th><th>ROC-AUC</th></tr>
+                    <tr>
+                        <td>mlp</td>
+                        <td>0.996</td>
+                        <td>0.996</td>
+                        <td>0.996</td>
+                        <td>1.000</td>
+                    </tr>
+
+                    <tr>
+                        <td>baseline</td>
+                        <td>0.951</td>
+                        <td>0.951</td>
+                        <td>0.950</td>
+                        <td>0.994</td>
+                    </tr>
+</table></div></div>
+        <div class="test-section">
+            <div class="test-header">
+                Consistencia de Predicciones - <span class="status-passed">PASSED</span>
+            </div>
+            <div class="test-content">
+<h4>✅ Detalles:</h4><ul><li>✅ mlp: Predicciones consistentes (std máx: 0.0000)</li><li>✅ baseline: Predicciones consistentes (std máx: 0.0000)</li></ul><h4>⚠️ Advertencias:</h4><ul><li>MLP sensible al ruido (diff máx: 0.1403)</li></ul></div></div>
+        <div class="test-section">
+            <div class="test-header">
+                Rendimiento por Género - <span class="status-passed">PASSED</span>
+            </div>
+            <div class="test-content">
+<h4>✅ Detalles:</h4><ul><li>✅ Sports: Excelente rendimiento (acc: 0.994)</li><li>✅ Role-Playing: Excelente rendimiento (acc: 0.999)</li><li>✅ Action: Excelente rendimiento (acc: 0.998)</li><li>✅ Racing: Excelente rendimiento (acc: 0.996)</li><li>✅ Shooter: Excelente rendimiento (acc: 0.998)</li><li>✅ Misc: Excelente rendimiento (acc: 0.999)</li><li>✅ Adventure: Excelente rendimiento (acc: 0.993)</li><li>✅ Puzzle: Excelente rendimiento (acc: 0.991)</li><li>✅ Simulation: Excelente rendimiento (acc: 0.997)</li><li>✅ Platform: Excelente rendimiento (acc: 0.997)</li><li>✅ Strategy: Excelente rendimiento (acc: 0.994)</li><li>✅ Fighting: Excelente rendimiento (acc: 0.999)</li><li>✅ Music: Excelente rendimiento (acc: 1.000)</li><li>✅ Card & Board Game: Excelente rendimiento (acc: 1.000)</li><li>✅ Precisión promedio por género: 0.997 (±0.003)</li><li>✅ Rango de precisión: 0.991 - 1.000</li></ul><h4>🎮 Rendimiento por Género:</h4><table><tr><th>Género</th><th>Precisión</th><th>F1-Score</th><th>Muestras</th></tr>
+                    <tr>
+                        <td>Sports</td>
+                        <td>0.994</td>
+                        <td>0.994</td>
+                        <td>2358</td>
+                    </tr>
+
+                    <tr>
+                        <td>Role-Playing</td>
+                        <td>0.999</td>
+                        <td>0.999</td>
+                        <td>1502</td>
+                    </tr>
+
+                    <tr>
+                        <td>Action</td>
+                        <td>0.998</td>
+                        <td>0.998</td>
+                        <td>3379</td>
+                    </tr>
+
+                    <tr>
+                        <td>Racing</td>
+                        <td>0.996</td>
+                        <td>0.996</td>
+                        <td>1253</td>
+                    </tr>
+
+                    <tr>
+                        <td>Shooter</td>
+                        <td>0.998</td>
+                        <td>0.998</td>
+                        <td>1325</td>
+                    </tr>
+
+                    <tr>
+                        <td>Misc</td>
+                        <td>0.999</td>
+                        <td>0.999</td>
+                        <td>1700</td>
+                    </tr>
+
+                    <tr>
+                        <td>Adventure</td>
+                        <td>0.993</td>
+                        <td>0.993</td>
+                        <td>1330</td>
+                    </tr>
+
+                    <tr>
+                        <td>Puzzle</td>
+                        <td>0.991</td>
+                        <td>0.991</td>
+                        <td>583</td>
+                    </tr>
+
+                    <tr>
+                        <td>Simulation</td>
+                        <td>0.997</td>
+                        <td>0.997</td>
+                        <td>876</td>
+                    </tr>
+
+                    <tr>
+                        <td>Platform</td>
+                        <td>0.997</td>
+                        <td>0.997</td>
+                        <td>891</td>
+                    </tr>
+
+                    <tr>
+                        <td>Strategy</td>
+                        <td>0.994</td>
+                        <td>0.994</td>
+                        <td>685</td>
+                    </tr>
+
+                    <tr>
+                        <td>Fighting</td>
+                        <td>0.999</td>
+                        <td>0.999</td>
+                        <td>850</td>
+                    </tr>
+
+                    <tr>
+                        <td>Music</td>
+                        <td>1.000</td>
+                        <td>1.000</td>
+                        <td>22</td>
+                    </tr>
+
+                    <tr>
+                        <td>Card & Board Game</td>
+                        <td>1.000</td>
+                        <td>1.000</td>
+                        <td>11</td>
+                    </tr>
+</table></div></div>
+        <div class="test-section">
+            <div class="test-header">
+                Casos Extremos - <span class="status-passed">PASSED</span>
+            </div>
+            <div class="test-content">
+<h4>✅ Detalles:</h4><ul><li>✅ Entrada grande: Sin overflow (0.000)</li><li>✅ Entrada negativa: Predicción estable (1.000)</li><li>✅ Batch size 1: OK</li><li>✅ Batch size 10: OK</li><li>✅ Batch size 100: OK</li></ul><h4>⚠️ Advertencias:</h4><ul><li>Entrada ceros: Predicción extrema (0.962)</li></ul></div></div>
+        <div class="timestamp">
+            <p>Reporte generado el: 2025-06-21 19:01:10</p>
+            <p>Sistema de Validación v1.0 - Proyecto de Predicción de Videojuegos</p>
+        </div>
+    </div>
+</body>
+</html>

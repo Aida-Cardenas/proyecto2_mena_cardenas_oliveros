@@ -95,14 +95,14 @@ def build_and_save_features():
     y = df["is_topseller"]
 
     # Paso 9: Guardar matrices en CSV para entrenamiento
-    #         'features_matrix.csv' y 'labels.csv' en carpeta data/processed
-    os.makedirs("data/processed", exist_ok=True)
-    X.to_csv("data/processed/features_matrix.csv", index=False)
-    y.to_csv("data/processed/labels.csv", index=False)
+    #         'features_matrix.csv' y 'labels.csv' en carpeta Data/Processed
+    os.makedirs("Data/Processed", exist_ok=True)
+    X.to_csv("Data/Processed/features_matrix.csv", index=False)
+    y.to_csv("Data/Processed/labels.csv", index=False)
 
     print("Feature engineering completado:")
-    print("- Features guardadas en data/processed/features_matrix.csv")
-    print("- Labels   guardadas en data/processed/labels.csv")
+    print("- Features guardadas en Data/Processed/features_matrix.csv")
+    print("- Labels   guardadas en Data/Processed/labels.csv")
 
 if __name__ == "__main__":
     build_and_save_features()

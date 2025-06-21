@@ -118,8 +118,8 @@ def main():
     print("Usando dispositivo:", device)
 
     # Paso 4.2: Cargar features y etiquetas desde CSV
-    X_df = pd.read_csv("data/processed/features_matrix.csv")
-    y_df = pd.read_csv("data/processed/labels.csv")
+    X_df = pd.read_csv("Data/Processed/features_matrix.csv")
+    y_df = pd.read_csv("Data/Processed/labels.csv")
 
     # Asegurarse de que labels sea un arreglo 1D
     y = y_df.values.squeeze()
@@ -170,8 +170,8 @@ def main():
             best_val_loss = val_loss
             no_improve = 0
             # Guardar pesos
-            os.makedirs("models", exist_ok=True)
-            torch.save(baseline.state_dict(), "models/baseline_perceptron.pth")
+            os.makedirs("Models", exist_ok=True)
+            torch.save(baseline.state_dict(), "Models/baseline_perceptron.pth")
         else:
             no_improve += 1
             if no_improve >= 5:
@@ -212,7 +212,7 @@ def main():
         if val_loss < best_val_loss:
             best_val_loss = val_loss
             no_improve = 0
-            torch.save(mlp.state_dict(), "models/mlp_classifier.pth")
+            torch.save(mlp.state_dict(), "Models/mlp_classifier.pth")
         else:
             no_improve += 1
             if no_improve >= 7:
@@ -237,8 +237,8 @@ def main():
 
     # Paso 9: Mostrar ubicación de archivos de modelos entrenados
     print("\nPesos finales guardados en:")
-    print("- models/baseline_perceptron.pth")
-    print("- models/mlp_classifier.pth")
+    print("- Models/baseline_perceptron.pth")
+    print("- Models/mlp_classifier.pth")
 
 if __name__ == "__main__":
     main()
