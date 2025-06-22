@@ -349,11 +349,6 @@ Incluir en el reporte:
 
 ## 📚 Referencias y Metodología
 
-### Base Teórica
-- **Keller, Liu y Fogel (2016)**: Arquitectura MLP de 2 capas ocultas
-- **Glorot, Bordes y Bengio (2011)**: Activación ReLU para gradientes estables
-- **Goodfellow, Bengio y Courville (2016)**: Función de pérdida de entropía cruzada
-
 ### Datasets Utilizados
 - Video Game Sales with Ratings (Kaggle)
 - Popular Video Games 1980-2023 (Kaggle)
