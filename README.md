@@ -262,8 +262,6 @@ df["year_genre_interaction"] = df["year_clean"].astype(str) + "_" + df["Genre"]
 
 ### Metodología de Validación
 
-El sistema implementa una metodología rigurosa de validación que incluye:
-
 1. **Validación Cruzada**: División estratificada de datos (80% entrenamiento, 20% validación)
 2. **Early Stopping**: Detención automática para evitar sobreajuste
 3. **Métricas Múltiples**: No solo accuracy, sino precision, recall, F1-score y ROC-AUC
@@ -279,73 +277,6 @@ El sistema se considera **exitoso** si cumple:
 - ✅ **Todas las pruebas de integridad** pasan
 - ✅ **Predicciones consistentes** (std < 0.01 en múltiples ejecuciones)
 - ✅ **Sin errores en casos extremos**
-
-### Limitaciones Conocidas
-
-1. **Datos Históricos**: Las predicciones se basan en patrones pasados
-2. **Factores Externos**: No considera marketing, eventos del mercado, etc.
-3. **Nuevos Géneros**: Rendimiento limitado en géneros con pocos datos
-4. **Sesgos Temporales**: Cambios en preferencias de consumidores no capturados
-
-## 🛠️ Solución de Problemas
-
-### Error: "Modelo no encontrado"
-```bash
-# Re-entrenar modelos
-python run_system.py --train
-```
-
-### Error: "Datos no procesados"
-```bash
-# Preparar datos desde cero
-python run_system.py --prepare
-```
-
-### Error: "GUI no inicia"
-```bash
-# Verificar tkinter
-python -c "import tkinter; print('tkinter OK')"
-
-# En Ubuntu/Debian
-sudo apt-get install python3-tk
-```
-
-### Error: "Dependencias faltantes"
-```bash
-# Crear requirements.txt
-python run_system.py --requirements
-
-# Instalar dependencias
-pip install -r requirements.txt
-```
-
-## 📞 Soporte y Contribución
-
-### Estructura del Proyecto
-```
-proyectojejeje/
-├── Data/                          # Datos raw y procesados
-├── Features/                      # Ingeniería de características
-├── Models/                        # Modelos entrenados
-├── GUI/                          # Interfaz gráfica
-├── Tests/                        # Sistema de validación
-├── run_system.py                 # Script principal
-└── README_COMPLETO.md           # Esta documentación
-```
-
-### Flujo de Desarrollo
-1. Modificar código fuente
-2. Ejecutar `python run_system.py --validate`
-3. Verificar que todas las pruebas pasen
-4. Regenerar indicadores si es necesario
-5. Probar en GUI
-
-### Reportar Problemas
-Incluir en el reporte:
-- Comando ejecutado
-- Mensaje de error completo
-- Contenido de `Tests/validation_report.html`
-- Versión de Python y librerías
 
 ## 📚 Referencias y Metodología
 
