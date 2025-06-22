@@ -15,19 +15,13 @@ from sklearn.metrics import (
     precision_recall_curve, roc_curve
 )
 
-# Agregar paths para imports
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from Models.train_pytorch import MLPClassifier, PerceptronBaseline
 from Features.predictive_indicators import PredictiveIndicators
 from Features.build_features import build_and_save_features
 
-class SystemValidationTests:
-    """
-    Suite completa de pruebas para validar el funcionamiento 
-    del sistema de predicción de videojuegos
-    """
-    
+class SystemValidationTests:   
     def __init__(self):
         self.test_results = {}
         self.models = {}
@@ -35,25 +29,20 @@ class SystemValidationTests:
         self.report_path = "Tests/validation_report.html"
         
     def setup_test_environment(self):
-        """Configurar entorno de pruebas"""
         print("🔧 Configurando entorno de pruebas...")
         
         try:
-            # Cargar datos
             self.data['features'] = pd.read_csv("Data/Processed/features_matrix.csv")
             self.data['labels'] = pd.read_csv("Data/Processed/labels.csv")
             self.data['original'] = pd.read_csv("Data/Processed/vgsales_integrated_refined.csv")
-            
-            # Cargar modelos
+
             input_dim = self.data['features'].shape[1]
             
-            # Modelo MLP
             self.models['mlp'] = MLPClassifier(input_dim)
             if os.path.exists("Models/mlp_classifier.pth"):
                 self.models['mlp'].load_state_dict(torch.load("Models/mlp_classifier.pth", map_location='cpu'))
                 self.models['mlp'].eval()
             
-            # Modelo Baseline
             self.models['baseline'] = PerceptronBaseline(input_dim)
             if os.path.exists("Models/baseline_perceptron.pth"):
                 self.models['baseline'].load_state_dict(torch.load("Models/baseline_perceptron.pth", map_location='cpu'))
@@ -67,7 +56,6 @@ class SystemValidationTests:
             return False
     
     def test_data_integrity(self):
-        """Prueba 1: Integridad de los datos"""
         print("\n📊 Ejecutando Prueba 1: Integridad de Datos")
         
         test_name = "data_integrity"
@@ -79,7 +67,6 @@ class SystemValidationTests:
             'errors': []
         }
         
-        # Verificar dimensiones
         features_shape = self.data['features'].shape
         labels_shape = self.data['labels'].shape
         
@@ -89,7 +76,6 @@ class SystemValidationTests:
         else:
             results['details'].append(f"✅ Dimensiones correctas: {features_shape[0]} muestras, {features_shape[1]} características")
         
-        # Verificar valores faltantes
         features_nan = self.data['features'].isnull().sum().sum()
         labels_nan = self.data['labels'].isnull().sum().sum()
         
@@ -101,7 +87,6 @@ class SystemValidationTests:
         else:
             results['details'].append("✅ No hay valores faltantes en labels")
         
-        # Verificar distribución de clases
         class_distribution = self.data['labels'].value_counts()
         minority_class_ratio = min(class_distribution) / len(self.data['labels'])
         
@@ -110,7 +95,6 @@ class SystemValidationTests:
         else:
             results['details'].append(f"✅ Distribución balanceada: {minority_class_ratio:.1%} clase minoritaria")
         
-        # Verificar rangos de features
         feature_stats = self.data['features'].describe()
         infinite_values = np.isinf(self.data['features'].values).sum()
         
@@ -125,8 +109,7 @@ class SystemValidationTests:
         return results['status'] == 'PASSED'
     
     def test_model_performance(self):
-        """Prueba 2: Rendimiento de los modelos"""
-        print("\n🤖 Ejecutando Prueba 2: Rendimiento de Modelos")
+        print("\n📊 Ejecutando Prueba 2: Rendimiento de Modelos")
         
         test_name = "model_performance"
         results = {
@@ -139,11 +122,9 @@ class SystemValidationTests:
         }
         
         try:
-            # Preparar datos
             X = self.data['features'].values.astype(float)
             y = self.data['labels'].values.flatten()
             
-            # Tratamiento de valores faltantes
             if np.isnan(X).any():
                 col_medias = np.nanmedian(X, axis=0)
                 inds_nan = np.where(np.isnan(X))
@@ -151,25 +132,21 @@ class SystemValidationTests:
             
             X_tensor = torch.from_numpy(X).float()
             
-            # Evaluar cada modelo
             for model_name, model in self.models.items():
                 if model is None:
                     results['warnings'].append(f"Modelo {model_name} no cargado")
                     continue
                 
-                # Generar predicciones
                 with torch.no_grad():
                     logits = model(X_tensor)
                     probabilities = torch.sigmoid(logits).numpy().flatten()
                     predictions = (probabilities >= 0.5).astype(int)
                 
-                # Calcular métricas
                 accuracy = accuracy_score(y, predictions)
                 precision = precision_score(y, predictions, average='weighted', zero_division=0)
                 recall = recall_score(y, predictions, average='weighted', zero_division=0)
                 f1 = f1_score(y, predictions, average='weighted', zero_division=0)
                 
-                # ROC-AUC solo si hay ambas clases
                 try:
                     if len(np.unique(y)) == 2:
                         roc_auc = roc_auc_score(y, probabilities)
@@ -178,7 +155,6 @@ class SystemValidationTests:
                 except:
                     roc_auc = None
                 
-                # Guardar métricas
                 results['metrics'][model_name] = {
                     'accuracy': accuracy,
                     'precision': precision,
@@ -187,7 +163,6 @@ class SystemValidationTests:
                     'roc_auc': roc_auc
                 }
                 
-                # Evaluar rendimiento
                 if accuracy < 0.6:
                     results['warnings'].append(f"{model_name}: Precisión baja ({accuracy:.3f})")
                 elif accuracy >= 0.8:
@@ -197,8 +172,7 @@ class SystemValidationTests:
                 
                 if f1 < 0.6:
                     results['warnings'].append(f"{model_name}: F1-Score bajo ({f1:.3f})")
-                
-            # Comparar modelos
+            
             if 'mlp' in results['metrics'] and 'baseline' in results['metrics']:
                 mlp_acc = results['metrics']['mlp']['accuracy']
                 baseline_acc = results['metrics']['baseline']['accuracy']
@@ -219,7 +193,6 @@ class SystemValidationTests:
         return results['status'] == 'PASSED'
     
     def test_prediction_consistency(self):
-        """Prueba 3: Consistencia de predicciones"""
         print("\n🔄 Ejecutando Prueba 3: Consistencia de Predicciones")
         
         test_name = "prediction_consistency"
@@ -232,13 +205,11 @@ class SystemValidationTests:
         }
         
         try:
-            # Seleccionar muestra para pruebas
             sample_size = min(100, len(self.data['features']))
             sample_indices = np.random.choice(len(self.data['features']), sample_size, replace=False)
             
             X_sample = self.data['features'].iloc[sample_indices].values.astype(float)
             
-            # Tratamiento de valores faltantes
             if np.isnan(X_sample).any():
                 col_medias = np.nanmedian(X_sample, axis=0)
                 inds_nan = np.where(np.isnan(X_sample))
@@ -246,43 +217,36 @@ class SystemValidationTests:
             
             X_tensor = torch.from_numpy(X_sample).float()
             
-            # Prueba de consistencia - múltiples ejecuciones
             for model_name, model in self.models.items():
                 if model is None:
                     continue
                 
                 predictions_list = []
                 
-                # Ejecutar múltiples predicciones
                 for _ in range(5):
                     with torch.no_grad():
                         logits = model(X_tensor)
                         probabilities = torch.sigmoid(logits).numpy().flatten()
                         predictions_list.append(probabilities)
                 
-                # Verificar consistencia
                 predictions_array = np.array(predictions_list)
                 std_predictions = np.std(predictions_array, axis=0)
                 max_std = np.max(std_predictions)
                 
-                if max_std > 0.01:  # Umbral de inconsistencia
+                if max_std > 0.01:
                     results['warnings'].append(f"{model_name}: Predicciones inconsistentes (std máx: {max_std:.4f})")
                 else:
                     results['details'].append(f"✅ {model_name}: Predicciones consistentes (std máx: {max_std:.4f})")
                 
-            # Prueba de robustez - pequeñas perturbaciones
             if 'mlp' in self.models and self.models['mlp'] is not None:
-                # Agregar ruido pequeño
                 noise_level = 0.01
                 X_noisy = X_sample + np.random.normal(0, noise_level, X_sample.shape)
                 X_noisy_tensor = torch.from_numpy(X_noisy).float()
                 
-                # Predicciones originales vs con ruido
                 with torch.no_grad():
                     original_probs = torch.sigmoid(self.models['mlp'](X_tensor)).numpy().flatten()
                     noisy_probs = torch.sigmoid(self.models['mlp'](X_noisy_tensor)).numpy().flatten()
                 
-                # Calcular diferencia
                 prob_diff = np.abs(original_probs - noisy_probs)
                 max_diff = np.max(prob_diff)
                 mean_diff = np.mean(prob_diff)
@@ -301,7 +265,6 @@ class SystemValidationTests:
         return results['status'] == 'PASSED'
     
     def test_genre_specific_performance(self):
-        """Prueba 4: Rendimiento específico por género"""
         print("\n🎮 Ejecutando Prueba 4: Rendimiento por Género")
         
         test_name = "genre_performance"
@@ -315,7 +278,6 @@ class SystemValidationTests:
         }
         
         try:
-            # Generar predicciones del modelo MLP
             if 'mlp' not in self.models or self.models['mlp'] is None:
                 results['errors'].append("Modelo MLP no disponible")
                 results['status'] = 'FAILED'
@@ -325,7 +287,6 @@ class SystemValidationTests:
             X = self.data['features'].values.astype(float)
             y = self.data['labels'].values.flatten()
             
-            # Tratamiento de valores faltantes
             if np.isnan(X).any():
                 col_medias = np.nanmedian(X, axis=0)
                 inds_nan = np.where(np.isnan(X))
@@ -338,7 +299,6 @@ class SystemValidationTests:
                 probabilities = torch.sigmoid(logits).numpy().flatten()
                 predictions = (probabilities >= 0.5).astype(int)
             
-            # Crear DataFrame con resultados
             results_df = pd.DataFrame({
                 'Genre': self.data['original']['Genre'],
                 'Actual': y,
@@ -346,15 +306,13 @@ class SystemValidationTests:
                 'Probability': probabilities
             })
             
-            # Analizar por género
             genre_stats = []
             for genre in results_df['Genre'].unique():
                 genre_data = results_df[results_df['Genre'] == genre]
                 
-                if len(genre_data) < 5:  # Muy pocos datos
+                if len(genre_data) < 5:
                     continue
                 
-                # Métricas por género
                 accuracy = accuracy_score(genre_data['Actual'], genre_data['Predicted'])
                 precision = precision_score(genre_data['Actual'], genre_data['Predicted'], 
                                           average='weighted', zero_division=0)
@@ -380,13 +338,11 @@ class SystemValidationTests:
                     'samples': len(genre_data)
                 }
                 
-                # Evaluar rendimiento por género
                 if accuracy < 0.5:
                     results['warnings'].append(f"{genre}: Rendimiento pobre (acc: {accuracy:.3f})")
                 elif accuracy >= 0.8:
                     results['details'].append(f"✅ {genre}: Excelente rendimiento (acc: {accuracy:.3f})")
             
-            # Estadísticas generales por género
             genre_df = pd.DataFrame(genre_stats)
             if not genre_df.empty:
                 avg_accuracy = genre_df['accuracy'].mean()
@@ -397,7 +353,6 @@ class SystemValidationTests:
                 results['details'].append(f"✅ Precisión promedio por género: {avg_accuracy:.3f} (±{std_accuracy:.3f})")
                 results['details'].append(f"✅ Rango de precisión: {min_accuracy:.3f} - {max_accuracy:.3f}")
                 
-                # Identificar géneros problemáticos
                 poor_genres = genre_df[genre_df['accuracy'] < 0.6]['genre'].tolist()
                 if poor_genres:
                     results['warnings'].append(f"Géneros con bajo rendimiento: {', '.join(poor_genres)}")
@@ -411,7 +366,6 @@ class SystemValidationTests:
         return results['status'] == 'PASSED'
     
     def test_edge_cases(self):
-        """Prueba 5: Casos extremos y límites"""
         print("\n⚡ Ejecutando Prueba 5: Casos Extremos")
         
         test_name = "edge_cases"
@@ -430,7 +384,6 @@ class SystemValidationTests:
                 self.test_results[test_name] = results
                 return False
             
-            # Caso 1: Entrada con todos ceros
             zero_input = torch.zeros(1, self.data['features'].shape[1])
             with torch.no_grad():
                 zero_pred = torch.sigmoid(self.models['mlp'](zero_input)).item()
@@ -440,7 +393,6 @@ class SystemValidationTests:
             else:
                 results['warnings'].append(f"Entrada ceros: Predicción extrema ({zero_pred:.3f})")
             
-            # Caso 2: Entrada con valores muy grandes
             large_input = torch.ones(1, self.data['features'].shape[1]) * 100
             with torch.no_grad():
                 large_pred = torch.sigmoid(self.models['mlp'](large_input)).item()
@@ -451,7 +403,6 @@ class SystemValidationTests:
                 results['errors'].append(f"Entrada grande: Overflow/NaN ({large_pred})")
                 results['status'] = 'FAILED'
             
-            # Caso 3: Entrada con valores negativos
             negative_input = torch.ones(1, self.data['features'].shape[1]) * -10
             with torch.no_grad():
                 negative_pred = torch.sigmoid(self.models['mlp'](negative_input)).item()
@@ -462,7 +413,6 @@ class SystemValidationTests:
                 results['errors'].append(f"Entrada negativa: Predicción inválida ({negative_pred})")
                 results['status'] = 'FAILED'
             
-            # Caso 4: Batch de diferentes tamaños
             for batch_size in [1, 10, 100]:
                 test_batch = torch.randn(batch_size, self.data['features'].shape[1])
                 with torch.no_grad():
@@ -483,15 +433,12 @@ class SystemValidationTests:
         return results['status'] == 'PASSED'
     
     def generate_performance_visualizations(self):
-        """Generar visualizaciones de rendimiento"""
         print("\n📊 Generando visualizaciones de rendimiento...")
         
         try:
-            # Configurar figura
             fig, axes = plt.subplots(2, 3, figsize=(18, 12))
             fig.suptitle('Reporte de Validación del Sistema de Predicción', fontsize=16, fontweight='bold')
             
-            # 1. Comparación de métricas entre modelos
             if 'model_performance' in self.test_results:
                 metrics_data = self.test_results['model_performance']['metrics']
                 
@@ -514,7 +461,6 @@ class SystemValidationTests:
                     axes[0, 0].legend()
                     axes[0, 0].grid(axis='y', alpha=0.3)
             
-            # 2. Rendimiento por género
             if 'genre_performance' in self.test_results:
                 genre_data = self.test_results['genre_performance']['genre_metrics']
                 
@@ -532,16 +478,13 @@ class SystemValidationTests:
                     axes[0, 1].set_xticklabels(genres, rotation=45, ha='right')
                     axes[0, 1].grid(axis='y', alpha=0.3)
             
-            # 3. Distribución de clases
             if self.data['labels'] is not None:
                 class_counts = self.data['labels'].value_counts()
                 axes[0, 2].pie(class_counts.values, labels=['No Top-Seller', 'Top-Seller'], 
                               autopct='%1.1f%%', startangle=90)
                 axes[0, 2].set_title('Distribución de Clases')
             
-            # 4. Matriz de confusión (si hay datos disponibles)
             if 'model_performance' in self.test_results and self.data['labels'] is not None:
-                # Generar predicciones para matriz de confusión
                 X = self.data['features'].values.astype(float)
                 y = self.data['labels'].values.flatten()
                 
@@ -562,7 +505,6 @@ class SystemValidationTests:
                     axes[1, 0].set_xlabel('Predicción')
                     axes[1, 0].set_ylabel('Real')
             
-            # 5. Resumen de pruebas
             test_status = []
             test_names = []
             
@@ -579,7 +521,6 @@ class SystemValidationTests:
             axes[1, 1].set_xticklabels(test_names, rotation=45, ha='right')
             axes[1, 1].set_ylim(0, 1.2)
             
-            # 6. Métricas temporales (placeholder)
             axes[1, 2].text(0.5, 0.5, 'Análisis de\nRendimiento\nTemporal\n\n(Disponible tras\nmúltiples ejecuciones)', 
                            ha='center', va='center', transform=axes[1, 2].transAxes)
             axes[1, 2].set_title('Rendimiento Temporal')
@@ -594,15 +535,12 @@ class SystemValidationTests:
             print(f"❌ Error generando visualizaciones: {str(e)}")
     
     def generate_html_report(self):
-        """Generar reporte HTML completo"""
         print("\n📝 Generando reporte HTML...")
         
-        # Calcular estadísticas generales
         total_tests = len(self.test_results)
         passed_tests = sum(1 for result in self.test_results.values() if result['status'] == 'PASSED')
         failed_tests = total_tests - passed_tests
         
-        # HTML del reporte
         html_content = f"""
 <!DOCTYPE html>
 <html lang="es">
@@ -655,7 +593,6 @@ class SystemValidationTests:
         </div>
 """
         
-        # Agregar detalles de cada prueba
         for test_name, result in self.test_results.items():
             status_class = "status-passed" if result['status'] == 'PASSED' else "status-failed"
             
@@ -667,28 +604,24 @@ class SystemValidationTests:
             <div class="test-content">
 """
             
-            # Detalles
             if result['details']:
                 html_content += "<h4>✅ Detalles:</h4><ul>"
                 for detail in result['details']:
                     html_content += f"<li>{detail}</li>"
                 html_content += "</ul>"
             
-            # Advertencias
             if result['warnings']:
                 html_content += "<h4>⚠️ Advertencias:</h4><ul>"
                 for warning in result['warnings']:
                     html_content += f"<li>{warning}</li>"
                 html_content += "</ul>"
             
-            # Errores
             if result['errors']:
                 html_content += "<h4>❌ Errores:</h4><ul>"
                 for error in result['errors']:
                     html_content += f"<li>{error}</li>"
                 html_content += "</ul>"
             
-            # Métricas específicas
             if 'metrics' in result and result['metrics']:
                 html_content += "<h4>📊 Métricas de Rendimiento:</h4>"
                 html_content += "<table><tr><th>Modelo</th><th>Precisión</th><th>Recall</th><th>F1-Score</th><th>ROC-AUC</th></tr>"
@@ -708,7 +641,6 @@ class SystemValidationTests:
 """
                 html_content += "</table>"
             
-            # Métricas por género
             if 'genre_metrics' in result and result['genre_metrics']:
                 html_content += "<h4>🎮 Rendimiento por Género:</h4>"
                 html_content += "<table><tr><th>Género</th><th>Precisión</th><th>F1-Score</th><th>Muestras</th></tr>"
@@ -726,7 +658,6 @@ class SystemValidationTests:
             
             html_content += "</div></div>"
         
-        # Pie del reporte
         html_content += f"""
         <div class="timestamp">
             <p>Reporte generado el: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}</p>
@@ -737,7 +668,6 @@ class SystemValidationTests:
 </html>
 """
         
-        # Guardar reporte
         os.makedirs('Tests', exist_ok=True)
         with open(self.report_path, 'w', encoding='utf-8') as f:
             f.write(html_content)
@@ -745,16 +675,13 @@ class SystemValidationTests:
         print(f"✅ Reporte HTML guardado en: {self.report_path}")
     
     def run_all_tests(self):
-        """Ejecutar todas las pruebas de validación"""
         print("🚀 INICIANDO VALIDACIÓN COMPLETA DEL SISTEMA")
         print("=" * 60)
         
-        # Configurar entorno
         if not self.setup_test_environment():
             print("❌ Error configurando entorno. Abortando pruebas.")
             return False
         
-        # Ejecutar todas las pruebas
         test_functions = [
             self.test_data_integrity,
             self.test_model_performance,
@@ -770,11 +697,9 @@ class SystemValidationTests:
             if test_func():
                 passed_tests += 1
         
-        # Generar visualizaciones y reporte
         self.generate_performance_visualizations()
         self.generate_html_report()
         
-        # Resumen final
         print("\n" + "=" * 60)
         print("📋 RESUMEN DE VALIDACIÓN")
         print("=" * 60)
@@ -797,7 +722,6 @@ class SystemValidationTests:
         return passed_tests == total_tests
 
 def main():
-    """Función principal para ejecutar validación"""
     validator = SystemValidationTests()
     success = validator.run_all_tests()
     return success

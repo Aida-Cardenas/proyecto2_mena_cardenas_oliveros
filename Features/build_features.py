@@ -5,27 +5,23 @@ import pandas as pd
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
 def build_and_save_features():
-    # Paso 1: Leer dataset refinado de ventas consolidadas
-    #         CSV con datos ya integrados y géneros refinados
+    # leer dataset ventas 
     df = pd.read_csv("./Data/Processed/vgsales_integrated_refined.csv")
 
-    # Paso 2: Definir etiqueta 'is_topseller'
-    #         Para cada juego, asignar 1 si sus ventas superan el percentil 75 de su género
+    # is_topseller para cada juego, asignar 1 si sus ventas superan el percentil 75 de su genero
     percentiles_75 = (
         df.groupby("Genre")["Global_Sales"]
           .quantile(0.75)
           .to_dict()
     )
 
-    #    Función auxiliar para asignar etiqueta
     def assign_topseller(row):
         umbral = percentiles_75.get(row["Genre"], 0)
         return 1 if row["Global_Sales"] >= umbral else 0
 
     df["is_topseller"] = df.apply(assign_topseller, axis=1)
 
-    # Paso 3: Imputar y limpiar datos numéricos originales
-    #         Convertir scores y ventas a numérico, forzar errores a NaN y luego imputar medianas
+    # input y limpiar datos numericos
     numeric_raw = [
         "Critic_Score", "Critic_Count",
         "User_Score", "User_Count",
@@ -35,14 +31,12 @@ def build_and_save_features():
         if col in df.columns:
             df[col] = pd.to_numeric(df[col], errors="coerce")
 
-    #    Rellenar NaN con la mediana de cada columna numérica
     for col in numeric_raw:
         if col in df.columns:
             median_value = df[col].median()
             df[col] = df[col].fillna(median_value)
 
-    # Paso 4: Crear características de ventas históricas
-    #         Media de ventas globales agrupada por género y por plataforma ('platform_clean')
+    # caracteristicas de ventas historicas
     ventas_por_genero = (
         df.groupby("Genre")["Global_Sales"]
           .mean()
@@ -56,12 +50,10 @@ def build_and_save_features():
     df = df.merge(ventas_por_genero, on="Genre", how="left")
     df = df.merge(ventas_por_plataforma, on="platform_clean", how="left")
 
-    # Paso 5: Construir variable de interacción Género×Plataforma
-    #         Combinar categorías para capturar relaciones conjuntas entre género y plataforma
+    # variable de interaccion genero x plataforma
     df["genre_platform_interaction"] = df["Genre"] + "_" + df["platform_clean"]
 
-    # Paso 6: Codificar variables categóricas con One-Hot Encoding
-    #         Cada valor único se convierte en columna binaria para modelos ML
+    # codificar variables categoricas con one-hot encoding
     categorical_cols = [
         "Genre", "platform_clean", "Publisher", "genre_platform_interaction"
     ]
@@ -74,8 +66,7 @@ def build_and_save_features():
         index=df.index
     )
 
-    # Paso 7: Estándarizar variables numéricas con StandardScaler
-    #         (valor - media) / desviación estándar para normalizar rangos
+    # estandarizar variables numericas con StandardScaler
     numeric_cols = [
         "Critic_Score", "Critic_Count",
         "User_Score", "User_Count",
@@ -89,13 +80,11 @@ def build_and_save_features():
         index=df.index
     )
 
-    # Paso 8: Preparar conjuntos de entrenamiento
-    #         X = matriz de características (OHE + escaladas), y = vector binario de etiquetas
+    # preparar conjuntos de entrenamiento
     X = pd.concat([df_ohe, df_scaled], axis=1)
     y = df["is_topseller"]
 
-    # Paso 9: Guardar matrices en CSV para entrenamiento
-    #         'features_matrix.csv' y 'labels.csv' en carpeta Data/Processed
+    # guardar matrices en csv
     os.makedirs("Data/Processed", exist_ok=True)
     X.to_csv("Data/Processed/features_matrix.csv", index=False)
     y.to_csv("Data/Processed/labels.csv", index=False)

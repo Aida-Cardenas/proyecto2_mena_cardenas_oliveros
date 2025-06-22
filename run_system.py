@@ -1,36 +1,20 @@
-# run_system.py
-"""
-Script principal para ejecutar el Sistema Predictor de Éxito en Videojuegos
-
-Este script permite ejecutar todos los componentes del sistema:
-1. Preparación de datos y entrenamiento de modelos
-2. Generación de indicadores predictivos
-3. Interfaz gráfica de usuario
-4. Validación y pruebas del sistema
-
-Autor: Sistema de Predicción de Videojuegos
-Fecha: 2024
-"""
-
 import os
 import sys
 import argparse
 from datetime import datetime
 
 def print_banner():
-    """Mostrar banner del sistema"""
     banner = """
     ╔════════════════════════════════════════════════════════════════╗
-    ║                🎮 SISTEMA PREDICTOR DE VIDEOJUEGOS 🎮           ║
+    ║                🎮 SISTEMA PREDICTOR DE VIDEOJUEGOS 🎮         ║
     ║                                                                ║
-    ║    Predicción de Éxito Comercial usando Redes Neuronales      ║
-    ║                          Versión 1.0                          ║
+    ║    Predicción de Éxito Comercial usando Redes Neuronales       ║
+    ║                          Versión 1.0                           ║
     ╚════════════════════════════════════════════════════════════════╝
     """
     print(banner)
 
 def check_dependencies():
-    """Verificar que todas las dependencias estén instaladas"""
     print("🔍 Verificando dependencias...")
     
     required_packages = [
@@ -67,7 +51,6 @@ def check_dependencies():
     return True
 
 def prepare_data():
-    """Preparar datos y construir características"""
     print("\n📊 PREPARANDO DATOS Y CARACTERÍSTICAS")
     print("=" * 50)
     
@@ -95,7 +78,6 @@ def prepare_data():
         return False
 
 def train_models():
-    """Entrenar modelos de ML"""
     print("\n🤖 ENTRENANDO MODELOS DE MACHINE LEARNING")
     print("=" * 50)
     
@@ -119,7 +101,6 @@ def train_models():
         return False
 
 def generate_indicators():
-    """Generar indicadores predictivos"""
     print("\n📈 GENERANDO INDICADORES PREDICTIVOS")
     print("=" * 50)
     
@@ -138,7 +119,6 @@ def generate_indicators():
         return False
 
 def run_validation():
-    """Ejecutar validación del sistema"""
     print("\n🔍 EJECUTANDO VALIDACIÓN DEL SISTEMA")
     print("=" * 50)
     
@@ -161,7 +141,6 @@ def run_validation():
         return False
 
 def launch_gui():
-    """Lanzar interfaz gráfica"""
     print("\n🖥️ LANZANDO INTERFAZ GRÁFICA")
     print("=" * 50)
     
@@ -178,9 +157,7 @@ def launch_gui():
         return False
 
 def create_requirements_file():
-    """Crear archivo requirements.txt"""
     requirements = """
-# Requerimientos del Sistema Predictor de Videojuegos
 torch>=1.9.0
 pandas>=1.3.0
 numpy>=1.21.0
@@ -195,11 +172,10 @@ seaborn>=0.11.0
     print("📝 Archivo requirements.txt creado")
 
 def show_usage():
-    """Mostrar instrucciones de uso"""
     usage = """
-🎮 INSTRUCCIONES DE USO DEL SISTEMA
+📝 INSTRUCCIONES DE USO DEL SISTEMA
 
-COMANDOS DISPONIBLES:
+COMANDOS:
   python run_system.py --full          # Ejecutar pipeline completo
   python run_system.py --prepare       # Solo preparar datos
   python run_system.py --train         # Solo entrenar modelos
@@ -232,10 +208,8 @@ ESTRUCTURA DE ARCHIVOS GENERADOS:
     print(usage)
 
 def main():
-    """Función principal"""
     print_banner()
     
-    # Configurar argumentos de línea de comandos
     parser = argparse.ArgumentParser(description="Sistema Predictor de Éxito en Videojuegos")
     parser.add_argument("--full", action="store_true", help="Ejecutar pipeline completo")
     parser.add_argument("--prepare", action="store_true", help="Solo preparar datos")
@@ -248,31 +222,25 @@ def main():
     
     args = parser.parse_args()
     
-    # Si no se especifican argumentos, mostrar ayuda
     if not any(vars(args).values()):
         show_usage()
         return
     
-    # Mostrar instrucciones de uso
     if args.usage:
         show_usage()
         return
     
-    # Crear requirements.txt
     if args.requirements:
         create_requirements_file()
         return
     
-    # Verificar dependencias
     if not check_dependencies():
-        print("\n❌ Faltan dependencias. Instale los paquetes requeridos.")
+        print("\n❌ Faltan dependencias. Instala los paquetes requeridos.")
         return
     
-    # Variables de control
     success = True
     start_time = datetime.now()
     
-    # Ejecutar pipeline completo
     if args.full:
         print("\n🚀 EJECUTANDO PIPELINE COMPLETO")
         print("=" * 60)
@@ -293,7 +261,6 @@ def main():
                 break
         
     else:
-        # Ejecutar pasos individuales
         if args.prepare:
             success &= prepare_data()
         
@@ -309,7 +276,6 @@ def main():
         if args.gui:
             success &= launch_gui()
     
-    # Resumen final
     end_time = datetime.now()
     duration = end_time - start_time
     
@@ -321,10 +287,9 @@ def main():
     print(f"Duración: {duration}")
     
     if success:
-        print("🎉 ¡EJECUCIÓN COMPLETADA EXITOSAMENTE!")
+        print("EJECUCIÓN COMPLETADA EXITOSAMENTE")
         print("\n📁 Archivos generados:")
         
-        # Listar archivos generados
         generated_files = [
             "Data/Processed/features_matrix.csv",
             "Data/Processed/labels.csv",
@@ -341,15 +306,15 @@ def main():
             else:
                 print(f"   ❌ {file_path} (no generado)")
         
-        print("\n💡 PRÓXIMOS PASOS:")
-        print("   1. Revisar el reporte de validación en Tests/validation_report.html")
-        print("   2. Usar la interfaz gráfica: python run_system.py --gui")
-        print("   3. Consultar indicadores en Data/Processed/reporte_indicadores_predictivos.md")
+        print("\n💡")
+        print("   1. Revisa el reporte de validación en Tests/validation_report.html")
+        print("   2. Usa la interfaz gráfica: python run_system.py --gui")
+        print("   3. Consulta indicadores en Data/Processed/reporte_indicadores_predictivos.md")
         
     else:
         print("❌ EJECUCIÓN CON ERRORES")
-        print("   Revisar los mensajes de error anteriores")
-        print("   Verificar que todos los archivos de datos estén presentes")
+        print("   Revisa los mensajes de error anteriores")
+        print("   Verifica que todos los archivos de datos estén presentes")
 
 if __name__ == "__main__":
     main() 

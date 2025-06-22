@@ -22,7 +22,7 @@ class GamePredictorGUI:
         self.root.geometry("1200x800")
         self.root.configure(bg='#2c3e50')
         
-        # Variables
+        # variables
         self.model = None
         self.predictor = PredictiveIndicators()
         self.genre_data = None
@@ -30,21 +30,19 @@ class GamePredictorGUI:
         self.original_data = None
         self.game_index = None
         
-        # Configurar estilo
+        # configurar estilo
         self.setup_style()
         
-        # Crear interfaz
+        # crear interfaz
         self.create_widgets()
         
-        # Cargar datos iniciales
+        # cargar datos iniciales
         self.load_initial_data()
     
     def setup_style(self):
-        """Configurar estilo moderno para la interfaz"""
         style = ttk.Style()
         style.theme_use('clam')
-        
-        # Colores personalizados
+    
         style.configure('Title.TLabel', 
                        font=('Helvetica', 16, 'bold'),
                        background='#2c3e50',
@@ -60,43 +58,38 @@ class GamePredictorGUI:
                        padding=10)
     
     def create_widgets(self):
-        """Crear widgets de la interfaz"""
-        # Frame principal
+        # frame principal
         main_frame = tk.Frame(self.root, bg='#2c3e50')
         main_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
         
-        # Título
+        # titulo
         title_label = ttk.Label(main_frame, 
                                text="🎮 SISTEMA PREDICTOR DE ÉXITO EN VIDEOJUEGOS",
                                style='Title.TLabel')
         title_label.pack(pady=(0, 20))
         
-        # Notebook para pestañas
+        # pestañas
         self.notebook = ttk.Notebook(main_frame)
         self.notebook.pack(fill=tk.BOTH, expand=True)
         
-        # Crear pestañas
         self.create_prediction_tab()
         self.create_analysis_tab()
         self.create_indicators_tab()
         
     def create_prediction_tab(self):
-        """Crear pestaña de predicción individual"""
         pred_frame = ttk.Frame(self.notebook)
         self.notebook.add(pred_frame, text="📊 Predicción Individual")
         
-        # Frame izquierdo para inputs
         input_frame = tk.Frame(pred_frame, bg='#34495e', relief=tk.RAISED, bd=2)
         input_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=5, pady=5)
-        
-        # Título del frame
+
         ttk.Label(input_frame, text="CARACTERÍSTICAS DEL JUEGO", 
                  style='Header.TLabel').pack(pady=10)
         
-        # Variables de entrada
+        # variables de entrada
         self.game_vars = {}
         
-        # Campo de búsqueda por nombre
+        # campo de busqueda por nombre
         tk.Label(input_frame, text="🔍 Buscar Juego por Nombre:", bg='#34495e', fg='white',
                 font=('Helvetica', 10, 'bold')).pack(anchor='w', padx=20, pady=(10,5))
         
@@ -110,14 +103,14 @@ class GamePredictorGUI:
                                command=self.search_game_by_name)
         search_btn.pack(side='right', padx=(5,0))
         
-        # Separador
+        # separador
         separator = tk.Frame(input_frame, height=2, bg='#3498db')
         separator.pack(fill='x', padx=20, pady=10)
         
         tk.Label(input_frame, text="⚙️ O ingrese características manualmente:", 
                 bg='#34495e', fg='white', font=('Helvetica', 9)).pack(anchor='w', padx=20)
         
-        # Género
+        # genero
         tk.Label(input_frame, text="Género:", bg='#34495e', fg='white', 
                 font=('Helvetica', 10, 'bold')).pack(anchor='w', padx=20, pady=5)
         self.game_vars['genre'] = ttk.Combobox(input_frame, width=30)
@@ -126,7 +119,7 @@ class GamePredictorGUI:
                                            'Platform', 'Puzzle', 'Shooter', 'Misc']
         self.game_vars['genre'].pack(padx=20, pady=5)
         
-        # Plataforma
+        # plataforma
         tk.Label(input_frame, text="Plataforma:", bg='#34495e', fg='white',
                 font=('Helvetica', 10, 'bold')).pack(anchor='w', padx=20, pady=5)
         self.game_vars['platform'] = ttk.Combobox(input_frame, width=30)
@@ -134,25 +127,25 @@ class GamePredictorGUI:
                                                'ps2', 'xb', 'pc', 'gba', 'gc']
         self.game_vars['platform'].pack(padx=20, pady=5)
         
-        # Puntuación de crítica
+        # puntuacion de critica
         tk.Label(input_frame, text="Puntuación Crítica (0-100):", bg='#34495e', fg='white',
                 font=('Helvetica', 10, 'bold')).pack(anchor='w', padx=20, pady=5)
         self.game_vars['critic_score'] = tk.Entry(input_frame, width=32)
         self.game_vars['critic_score'].pack(padx=20, pady=5)
         
-        # Puntuación de usuario
+        # puntuacion de usuario
         tk.Label(input_frame, text="Puntuación Usuario (0-10):", bg='#34495e', fg='white',
                 font=('Helvetica', 10, 'bold')).pack(anchor='w', padx=20, pady=5)
         self.game_vars['user_score'] = tk.Entry(input_frame, width=32)
         self.game_vars['user_score'].pack(padx=20, pady=5)
         
-        # Año
+        # anno
         tk.Label(input_frame, text="Año de Lanzamiento:", bg='#34495e', fg='white',
                 font=('Helvetica', 10, 'bold')).pack(anchor='w', padx=20, pady=5)
         self.game_vars['year'] = tk.Entry(input_frame, width=32)
         self.game_vars['year'].pack(padx=20, pady=5)
         
-        # Botones de predicción
+        # botones de prediccion
         button_frame = tk.Frame(input_frame, bg='#34495e')
         button_frame.pack(pady=20)
         
@@ -166,11 +159,11 @@ class GamePredictorGUI:
                               command=self.clear_fields)
         clear_btn.pack(pady=5)
         
-        # Frame derecho para resultados
+        # frame derecho para resultados
         result_frame = tk.Frame(pred_frame, bg='#2c3e50', relief=tk.RAISED, bd=2)
         result_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True, padx=5, pady=5)
         
-        # Área de resultados
+        # area de resultados
         ttk.Label(result_frame, text="RESULTADO DE LA PREDICCIÓN", 
                  style='Header.TLabel').pack(pady=10)
         
@@ -179,11 +172,10 @@ class GamePredictorGUI:
         self.result_text.pack(padx=20, pady=10, fill=tk.BOTH, expand=True)
     
     def create_analysis_tab(self):
-        """Crear pestaña de análisis general"""
         analysis_frame = ttk.Frame(self.notebook)
         self.notebook.add(analysis_frame, text="📈 Análisis General")
         
-        # Botones de control
+        # botones de control
         control_frame = tk.Frame(analysis_frame, bg='#34495e', height=80)
         control_frame.pack(fill=tk.X, padx=5, pady=5)
         control_frame.pack_propagate(False)
@@ -200,42 +192,35 @@ class GamePredictorGUI:
                   command=self.export_report,
                   style='Custom.TButton').pack(side=tk.LEFT, padx=10, pady=20)
         
-        # Área de visualización
+        # area de visualizacion
         self.analysis_text = tk.Text(analysis_frame, bg='#ecf0f1', 
                                    font=('Courier', 10))
         self.analysis_text.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
         
-        # Scrollbar
+        # scrollbar
         scrollbar = ttk.Scrollbar(self.analysis_text)
         scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
         self.analysis_text.config(yscrollcommand=scrollbar.set)
         scrollbar.config(command=self.analysis_text.yview)
     
     def create_indicators_tab(self):
-        """Crear pestaña de indicadores visuales"""
         indicators_frame = ttk.Frame(self.notebook)
         self.notebook.add(indicators_frame, text="📊 Indicadores Visuales")
-        
-        # Frame para gráficos
+
         self.chart_frame = tk.Frame(indicators_frame, bg='white')
         self.chart_frame.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
         
     def load_initial_data(self):
-        """Cargar datos iniciales"""
         try:
-            # Intentar cargar datos existentes
             if os.path.exists('Data/Processed/genre_indicators.csv'):
                 self.genre_data = pd.read_csv('Data/Processed/genre_indicators.csv', index_col=0)
             if os.path.exists('Data/Processed/platform_indicators.csv'):
                 self.platform_data = pd.read_csv('Data/Processed/platform_indicators.csv', index_col=0)
             
-            # Cargar datos originales para búsqueda
             if os.path.exists('Data/Processed/vgsales_integrated_refined.csv'):
                 self.original_data = pd.read_csv('Data/Processed/vgsales_integrated_refined.csv')
-                # Crear índice de búsqueda rápida
                 self.game_index = self.original_data.set_index('name_clean')
-                
-            # Cargar modelo si existe
+
             if os.path.exists('Models/mlp_classifier.pth'):
                 features_df = pd.read_csv("Data/Processed/features_matrix.csv")
                 input_dim = features_df.shape[1]
@@ -248,23 +233,21 @@ class GamePredictorGUI:
             self.update_status(f"Error cargando datos: {str(e)}")
     
     def predict_individual_game(self):
-        """Predecir éxito de un juego individual usando la función mejorada"""
         self.predict_game_with_explanation()
     
     def show_prediction_result(self, genre, platform, critic_score, user_score, year, probability):
-        """Mostrar resultado de predicción"""
         result = f"""
 🎮 ANÁLISIS DE PREDICCIÓN DE ÉXITO
 {'='*50}
 
-📋 CARACTERÍSTICAS DEL JUEGO:
+📄 CARACTERÍSTICAS DEL JUEGO:
    • Género: {genre}
    • Plataforma: {platform}
    • Año: {year}
    • Puntuación Crítica: {critic_score}/100
    • Puntuación Usuario: {user_score}/10
 
-🔮 RESULTADO DE LA PREDICCIÓN:
+📄 RESULTADO DE LA PREDICCIÓN:
    • Probabilidad de Éxito: {probability:.1%}
    • Clasificación: {"TOP-SELLER" if probability >= 0.5 else "VENTAS NORMALES"}
 
@@ -282,7 +265,7 @@ class GamePredictorGUI:
             genre_stats = self.genre_data.loc[genre]
             result += f"""
 
-📈 ESTADÍSTICAS DEL GÉNERO {genre.upper()}:
+📊 ESTADÍSTICAS DEL GÉNERO {genre.upper()}:
    • Probabilidad promedio: {genre_stats['Prob_Promedio']:.1%}
    • Juegos analizados: {genre_stats['Total_Juegos']}
    • Ventas promedio: ${genre_stats['Ventas_Promedio']:.2f}M
@@ -291,13 +274,12 @@ class GamePredictorGUI:
         
         result += f"""
 
-💡 RECOMENDACIONES:
-   • Considere optimizar las puntuaciones de crítica y usuario
-   • Evalúe el timing de lanzamiento en el mercado
-   • Analice la competencia en el género seleccionado
-   • Considere estrategias de marketing específicas para la plataforma
+📄 RECOMENDACIONES:
+   • Evaluar el timing de lanzamiento en el mercado
+   • Analizar la competencia en el género seleccionado
+   • Considerar estrategias de marketing específicas para la plataforma
 
-🕒 Análisis generado: {pd.Timestamp.now().strftime('%Y-%m-%d %H:%M:%S')}
+📄 Análisis generado: {pd.Timestamp.now().strftime('%Y-%m-%d %H:%M:%S')}
 """
         
         self.result_text.delete(1.0, tk.END)
@@ -307,12 +289,12 @@ class GamePredictorGUI:
         """Buscar juego por nombre y autocompletar campos"""
         try:
             if not hasattr(self, 'original_data') or self.original_data is None:
-                messagebox.showerror("Error", "Datos originales no cargados. Ejecute el análisis completo primero.")
+                messagebox.showerror("Error", "Datos originales no cargados. Ejecutar analisis completo primero.")
                 return
             
             search_name = self.game_vars['name_search'].get().strip().lower()
             if not search_name:
-                messagebox.showwarning("Advertencia", "Por favor ingrese el nombre de un juego para buscar.")
+                messagebox.showwarning("Advertencia", "Por favor ingrese el nombre de un juego")
                 return
             
             # Buscar juego en los datos
@@ -323,38 +305,34 @@ class GamePredictorGUI:
             if matches.empty:
                 messagebox.showinfo("No encontrado", 
                                   f"No se encontró ningún juego que contenga '{search_name}'.\n"
-                                  "Puede ingresar las características manualmente.")
+                                  "Puede ingresar las caracteristicas manualmente.")
                 return
             
-            # Si hay múltiples coincidencias, tomar la primera
             if len(matches) > 1:
-                # Crear ventana de selección
                 self.show_game_selection_window(matches, search_name)
             else:
-                # Si solo hay una coincidencia, usarla directamente
                 self.populate_fields_from_game(matches.iloc[0])
                 
         except Exception as e:
             messagebox.showerror("Error", f"Error buscando juego: {str(e)}")
     
     def show_game_selection_window(self, matches, search_name):
-        """Mostrar ventana para seleccionar entre múltiples juegos encontrados"""
         selection_window = tk.Toplevel(self.root)
         selection_window.title("Seleccionar Juego")
         selection_window.geometry("600x400")
         selection_window.configure(bg='#2c3e50')
         
-        # Título
+        # titulo
         title_label = tk.Label(selection_window, 
                               text=f"Se encontraron {len(matches)} juegos que contienen '{search_name}'",
                               bg='#2c3e50', fg='white', font=('Helvetica', 12, 'bold'))
         title_label.pack(pady=10)
         
-        # Frame para lista
+        # frame para lista
         list_frame = tk.Frame(selection_window, bg='#2c3e50')
         list_frame.pack(fill=tk.BOTH, expand=True, padx=20, pady=10)
-        
-        # Scrollbar y Listbox
+            
+         # scrollbar y listbox
         scrollbar = ttk.Scrollbar(list_frame)
         scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
         
@@ -363,12 +341,11 @@ class GamePredictorGUI:
         game_listbox.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         scrollbar.config(command=game_listbox.yview)
         
-        # Llenar lista con información de juegos
         for idx, (_, game) in enumerate(matches.iterrows()):
             game_info = f"{game['name_clean']} | {game['Genre']} | {game['platform_clean']} | {game['year_clean']}"
             game_listbox.insert(tk.END, game_info)
         
-        # Botones
+        # botones
         button_frame = tk.Frame(selection_window, bg='#2c3e50')
         button_frame.pack(pady=10)
         
@@ -388,22 +365,21 @@ class GamePredictorGUI:
         cancel_btn.pack(side=tk.LEFT, padx=5)
     
     def populate_fields_from_game(self, game_data):
-        """Llenar campos con datos del juego encontrado"""
         try:
-            # Limpiar campos primero
+            # limpiar campos primero
             self.clear_fields()
             
-            # Llenar campos con datos reales
+            # llenar campos con datos reales
             self.game_vars['genre'].set(str(game_data['Genre']))
             self.game_vars['platform'].set(str(game_data['platform_clean']))
             
-            # Llenar scores si están disponibles
+            # llenar scores si estan disponibles
             if pd.notna(game_data.get('Critic_Score')):
                 self.game_vars['critic_score'].delete(0, tk.END)
                 self.game_vars['critic_score'].insert(0, str(int(game_data['Critic_Score'])))
             
             if pd.notna(game_data.get('User_Score')):
-                # Convertir User_Score a numérico si es posible
+                # convertir User_Score a numerico si es posible
                 try:
                     user_score = float(game_data['User_Score'])
                     self.game_vars['user_score'].delete(0, tk.END)
@@ -415,7 +391,7 @@ class GamePredictorGUI:
                 self.game_vars['year'].delete(0, tk.END)
                 self.game_vars['year'].insert(0, str(int(game_data['year_clean'])))
             
-            # Ejecutar predicción automáticamente
+            # ejecutar prediccion automaticamente
             self.predict_game_with_explanation(game_data)
             
             messagebox.showinfo("Éxito", f"Datos cargados para: {game_data['name_clean']}")
@@ -424,7 +400,6 @@ class GamePredictorGUI:
             messagebox.showerror("Error", f"Error llenando campos: {str(e)}")
     
     def clear_fields(self):
-        """Limpiar todos los campos de entrada"""
         self.game_vars['name_search'].delete(0, tk.END)
         self.game_vars['genre'].set('')
         self.game_vars['platform'].set('')
@@ -434,15 +409,14 @@ class GamePredictorGUI:
         self.result_text.delete(1.0, tk.END)
     
     def predict_game_with_explanation(self, game_data=None):
-        """Predecir con explicación detallada de indicadores"""
         try:
             if self.model is None:
                 messagebox.showerror("Error", "Modelo no cargado. Ejecute el análisis completo primero.")
                 return
             
-            # Obtener datos del juego
+            # obtener datos del juego
             if game_data is not None:
-                # Usar datos reales del juego
+                # usar datos reales del juego
                 genre = str(game_data['Genre'])
                 platform = str(game_data['platform_clean'])
                 critic_score = float(game_data.get('Critic_Score', 75))
@@ -451,7 +425,7 @@ class GamePredictorGUI:
                 game_name = str(game_data['name_clean'])
                 real_sales = float(game_data.get('Global_Sales', 0))
             else:
-                # Usar datos ingresados manualmente
+                # usar datos ingresados manualmente
                 if not all([self.game_vars['genre'].get(), self.game_vars['platform'].get()]):
                     messagebox.showerror("Error", "Por favor complete al menos Género y Plataforma.")
                     return
@@ -464,7 +438,7 @@ class GamePredictorGUI:
                 game_name = "Juego Personalizado"
                 real_sales = None
             
-            # Calcular probabilidad
+            # calcular probabilidad
             if self.genre_data is not None and genre in self.genre_data.index:
                 base_prob = self.genre_data.loc[genre, 'Prob_Promedio']
                 genre_stats = self.genre_data.loc[genre]
@@ -472,20 +446,18 @@ class GamePredictorGUI:
                 base_prob = 0.5
                 genre_stats = None
             
-            # Ajustar por puntuaciones y otros factores
             score_factor = (critic_score / 100 + user_score / 10) / 2
             
-            # Factor de plataforma
             platform_factor = 1.0
             if self.platform_data is not None and platform in self.platform_data.index:
                 platform_factor = self.platform_data.loc[platform, 'Prob_Promedio'] / 0.5
             
-            # Factor temporal (juegos más recientes tienen ligera ventaja)
+            # factor temporal (juegos mas recientes tienen ligera ventaja)
             year_factor = min(1.1, (year - 1980) / (2024 - 1980) * 0.2 + 0.9)
             
             final_prob = min(base_prob * score_factor * platform_factor * year_factor, 1.0)
             
-            # Mostrar resultado detallado
+            # mostrar resultado detallado
             self.show_detailed_prediction_result(
                 game_name, genre, platform, critic_score, user_score, year,
                 final_prob, base_prob, score_factor, platform_factor, year_factor,
@@ -500,9 +472,8 @@ class GamePredictorGUI:
     def show_detailed_prediction_result(self, game_name, genre, platform, critic_score, 
                                       user_score, year, final_prob, base_prob, score_factor,
                                       platform_factor, year_factor, genre_stats, real_sales):
-        """Mostrar resultado detallado con explicaciones"""
         
-        # Determinar clasificación
+        # determinar clasificacion
         if final_prob >= 0.7:
             classification = "🟢 TOP-SELLER POTENCIAL"
             confidence = "ALTA"
@@ -517,7 +488,7 @@ class GamePredictorGUI:
             recommendation = "PRECAUCIÓN - Revisar estrategia de desarrollo/marketing"
         
         result = f"""
-🎮 ANÁLISIS DETALLADO DE PREDICCIÓN
+🎮 ANÁLISIS DETALLADO DE PREDICCION
 {'='*60}
 
 📋 INFORMACIÓN DEL JUEGO:
@@ -607,31 +578,27 @@ class GamePredictorGUI:
 
 🕒 Análisis generado: {pd.Timestamp.now().strftime('%Y-%m-%d %H:%M:%S')}
 
-💡 DISCLAIMER: Esta predicción se basa en patrones históricos.
-   Factores como marketing, calidad del desarrollo y eventos
-   del mercado pueden influir significativamente en el resultado real.
 """
         
         self.result_text.delete(1.0, tk.END)
         self.result_text.insert(1.0, result)
     
     def run_complete_analysis(self):
-        """Ejecutar análisis completo"""
         try:
             self.update_status("Ejecutando análisis completo... ⏳")
             self.root.update()
             
-            # Ejecutar análisis
+            # ejecutar análisis
             genre_indicators, platform_indicators, insights, results_df = self.predictor.run_complete_analysis()
             
-            # Actualizar datos
+            # actualizar datos
             self.genre_data = genre_indicators
             self.platform_data = platform_indicators
             
-            # Mostrar resultados
+            # mostrar resultados
             self.show_analysis_results(genre_indicators, platform_indicators, insights)
             
-            # Actualizar gráficos
+            # actualizar gráficos
             self.update_charts(genre_indicators, platform_indicators)
             
             self.update_status("Análisis completado ✅")
@@ -641,7 +608,6 @@ class GamePredictorGUI:
             self.update_status("Error en análisis ❌")
     
     def show_analysis_results(self, genre_indicators, platform_indicators, insights):
-        """Mostrar resultados del análisis"""
         result = f"""
 🎮 REPORTE DE ANÁLISIS COMPLETO
 {'='*80}
@@ -681,16 +647,15 @@ class GamePredictorGUI:
         self.analysis_text.insert(1.0, result)
     
     def update_charts(self, genre_indicators, platform_indicators):
-        """Actualizar gráficos en la pestaña de indicadores"""
-        # Limpiar frame anterior
+        # limpiar frame anterior
         for widget in self.chart_frame.winfo_children():
             widget.destroy()
         
-        # Crear figura
+        # crear figura
         fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(12, 8))
         fig.suptitle('Indicadores Predictivos de Éxito', fontsize=14, fontweight='bold')
         
-        # Gráfico 1: Top géneros
+        # grafico 1: top generos
         top_genres = genre_indicators['Prob_Promedio'].sort_values(ascending=False).head(8)
         colors = ['#2ecc71' if x >= 0.7 else '#f39c12' if x >= 0.5 else '#e74c3c' for x in top_genres.values]
         ax1.bar(range(len(top_genres)), top_genres.values, color=colors)
@@ -700,7 +665,7 @@ class GamePredictorGUI:
         ax1.set_xticks(range(len(top_genres)))
         ax1.set_xticklabels(top_genres.index, rotation=45, ha='right')
         
-        # Gráfico 2: Top plataformas
+        # grafico 2: top plataformas
         top_platforms = platform_indicators['Prob_Promedio'].head(8)
         ax2.bar(range(len(top_platforms)), top_platforms.values, color='lightblue')
         ax2.set_title('Top Plataformas por Probabilidad')
@@ -709,12 +674,12 @@ class GamePredictorGUI:
         ax2.set_xticks(range(len(top_platforms)))
         ax2.set_xticklabels(top_platforms.index, rotation=45, ha='right')
         
-        # Gráfico 3: Distribución de juegos por género
+        # grafico 3: distribucion de juegos por genero
         genre_counts = genre_indicators['Total_Juegos'].sort_values(ascending=False).head(8)
         ax3.pie(genre_counts.values, labels=genre_counts.index, autopct='%1.1f%%')
         ax3.set_title('Distribución de Juegos por Género')
         
-        # Gráfico 4: Ventas promedio vs Probabilidad
+        # grafico 4: ventas promedio vs probabilidad
         ax4.scatter(genre_indicators['Ventas_Promedio'], genre_indicators['Prob_Promedio'], 
                    s=genre_indicators['Total_Juegos']*2, alpha=0.6, c=range(len(genre_indicators)))
         ax4.set_xlabel('Ventas Promedio (M)')
@@ -723,25 +688,23 @@ class GamePredictorGUI:
         
         plt.tight_layout()
         
-        # Integrar en tkinter
+        # integrar en tkinter
         canvas = FigureCanvasTkAgg(fig, self.chart_frame)
         canvas.draw()
         canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)
     
     def show_indicators(self):
-        """Mostrar indicadores detallados"""
         if self.genre_data is None:
             messagebox.showinfo("Info", "Ejecute el análisis completo primero.")
             return
         
-        # Cambiar a pestaña de indicadores
+        # cambiar a pestanna de indicadores
         self.notebook.select(2)
         
-        # Actualizar gráficos
+        # actualizar graficos
         self.update_charts(self.genre_data, self.platform_data)
     
     def export_report(self):
-        """Exportar reporte a archivo"""
         try:
             filename = filedialog.asksaveasfilename(
                 defaultextension=".txt",
@@ -758,10 +721,9 @@ class GamePredictorGUI:
             messagebox.showerror("Error", f"Error exportando reporte: {str(e)}")
     
     def update_status(self, message):
-        """Actualizar barra de estado"""
         if hasattr(self, 'status_label'):
             self.status_label.config(text=message)
-        print(message)  # También imprimir en consola
+        print(message)  
 
 def main():
     root = tk.Tk()
